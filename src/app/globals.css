@@ -2,8 +2,8 @@
 
 :root {
   --text-size: 20px;
-  --background: #f7f4ef;
-  --foreground: #1a1a1a;
+  --background: #faf7f0;
+  --foreground: #1c1a17;
 }
 
 html[data-text-size="large"] {
@@ -19,12 +19,13 @@ html {
 }
 
 @theme inline {
-  --color-paper: #f7f4ef;
-  --color-surface: #fffdf8;
-  --color-ink: #1a1a1a;
-  --color-muted: #3f3c38;
-  --color-navy: #0b3a5b;
-  --color-navy-strong: #07293f;
+  --color-paper: #faf7f0;
+  --color-surface: #ffffff;
+  --color-ink: #1c1a17;
+  --color-muted: #4a4742;
+  --color-navy: #176b68;
+  --color-navy-strong: #0f4f4d;
+  --color-coral: #f08069;
   --color-correct: #0f5132;
   --color-correct-bg: #e7f5ec;
   --color-retry: #7a2e0e;
@@ -39,7 +40,7 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid #0b3a5b;
+  outline: 3px solid #176b68;
   outline-offset: 3px;
 }
 

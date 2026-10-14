@@ -14,12 +14,20 @@ export default function UnitTwoPage() {
         <p className="mt-4 leading-relaxed">
           This unit is not ready yet. You can return home and review Unit 1 anytime.
         </p>
-        <Link
-          href="/"
-          className="mt-8 inline-flex min-h-14 w-full items-center justify-center rounded-xl border-2 border-navy bg-navy px-4 py-3 font-bold text-white sm:max-w-xs"
-        >
-          Back to Unit 1
-        </Link>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/"
+            className="inline-flex min-h-14 w-full items-center justify-center rounded-xl border-2 border-navy bg-navy px-4 py-3 font-bold text-white hover:bg-navy-strong"
+          >
+            Back home
+          </Link>
+          <Link
+            href="/unit-1"
+            className="inline-flex min-h-14 w-full items-center justify-center rounded-xl border-2 border-ink bg-surface px-4 py-3 font-bold text-ink"
+          >
+            Review Unit 1
+          </Link>
+        </div>
       </main>
     </>
   );

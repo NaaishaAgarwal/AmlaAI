@@ -36,6 +36,19 @@ import { LESSON_POINTS } from "@/lib/rewards";
 
 const ASK_FORM_ID = "ask-ai-form";
 
+// Set in the click handler before the address changes. Progress state can commit
+// a render later, and this map lets that render keep the screen just opened.
+const reachedScreens = new Map<string, number>();
+
+function allowReachedScreen(lessonId: string, screen: number) {
+  const current = reachedScreens.get(lessonId) ?? 0;
+  if (screen > current) reachedScreens.set(lessonId, screen);
+}
+
+function reachedScreen(lessonId: string) {
+  return reachedScreens.get(lessonId) ?? 0;
+}
+
 function topicIsReady(activity: TopicChoiceActivity, topicId: string, customTopic: string) {
   if (!topicId) return false;
   if (topicId !== activity.otherId) return true;
@@ -59,17 +72,12 @@ export function LessonPlayer({
   const [topicId, setTopicId] = useState("");
   const [customTopic, setCustomTopic] = useState("");
   const [awardNotes, setAwardNotes] = useState<Record<string, boolean>>({});
-  const [navIntent, setNavIntent] = useState<{ lessonId: string; screen: number } | null>(null);
-  if (navIntent && navIntent.lessonId !== lessonId) {
-    setNavIntent(null);
-  }
-  const pendingScreen = navIntent?.lessonId === lessonId ? navIntent.screen : 0;
 
   const saved = lesson ? state.lessons[lesson.id] : undefined;
   const lastIndex = lesson ? lesson.screens.length - 1 : 0;
   const storedFurthest =
     saved?.status === "completed" ? lastIndex : (saved?.furthestScreen ?? 0);
-  const allowedFurthest = Math.max(storedFurthest, pendingScreen);
+  const allowedFurthest = Math.max(storedFurthest, lesson ? reachedScreen(lesson.id) : 0);
   const requested =
     rawScreen === undefined ? (saved?.currentScreen ?? 0) : Number(rawScreen);
   const screenIndex = lesson ? clampScreen(requested, allowedFurthest, lastIndex) : 0;
@@ -78,12 +86,13 @@ export function LessonPlayer({
 
   useEffect(() => {
     if (!ready || !lesson) return;
+    if (!isLessonUnlocked(state, unit1.lessons, lessonIndex(lesson.id))) return;
     const current = state.lessons[lesson.id];
     const last = lesson.screens.length - 1;
     const furthest =
       current?.status === "completed"
         ? last
-        : Math.max(current?.furthestScreen ?? 0, pendingScreen);
+        : Math.max(current?.furthestScreen ?? 0, reachedScreen(lesson.id));
     const asked = rawScreen === undefined ? (current?.currentScreen ?? 0) : Number(rawScreen);
     const next = clampScreen(asked, furthest, last);
     if (rawScreen !== String(next)) {
@@ -102,7 +111,7 @@ export function LessonPlayer({
       }
       return visitLesson(prev, lesson.id, next);
     });
-  }, [ready, lesson, rawScreen, router, state.lessons, update, pendingScreen]);
+  }, [ready, lesson, rawScreen, router, state, state.lessons, update]);
 
   useEffect(() => {
     if (!ready || !lesson || screen?.kind !== "completion") return;
@@ -179,7 +188,7 @@ export function LessonPlayer({
   }
 
   function goTo(nextIndex: number) {
-    setNavIntent({ lessonId: lesson!.id, screen: nextIndex });
+    allowReachedScreen(lesson!.id, nextIndex);
     update((prev) => visitLesson(prev, lesson!.id, nextIndex));
     router.push(`/lesson/${lesson!.id}?screen=${nextIndex}`);
   }
@@ -368,7 +377,7 @@ export function LessonPlayer({
         ) : null}
         <nav
           aria-label="Lesson"
-          className="sticky bottom-0 mt-6 grid gap-3 border-t-2 border-ink bg-paper py-4 sm:grid-cols-3"
+          className="mt-8 grid gap-3 border-t-2 border-ink bg-paper py-4 sm:grid-cols-3"
         >
           <Button variant="secondary" onClick={() => (screenIndex === 0 ? router.push("/") : goTo(screenIndex - 1))}>
             Back

@@ -1,5 +1,5 @@
-import { UnitOverview } from "@/components/unit/UnitOverview";
+import { LearningJourney } from "@/components/unit/LearningJourney";
 
 export default function Home() {
-  return <UnitOverview />;
+  return <LearningJourney />;
 }

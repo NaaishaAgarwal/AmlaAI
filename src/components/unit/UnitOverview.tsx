@@ -79,13 +79,13 @@ export function UnitOverview() {
                   <p className="mt-2 font-semibold">
                     {!ready
                       ? "Loading your progress"
-                      : status === "completed"
-                        ? "Completed"
-                        : status === "in_progress"
-                          ? "In progress"
-                          : unlocked
-                            ? "Ready"
-                            : "Locked until the previous lesson is complete"}
+                      : !unlocked
+                        ? "Locked until the previous lesson is complete"
+                        : status === "completed"
+                          ? "Completed"
+                          : status === "in_progress"
+                            ? "In progress"
+                            : "Ready"}
                   </p>
                   <div className="mt-4 max-w-xs">
                     {ready && unlocked ? (

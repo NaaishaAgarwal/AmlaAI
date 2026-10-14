@@ -6,6 +6,7 @@ import {
   completeChallenge,
   completeLesson,
   completeUnit,
+  countCompletedLessons,
   createEmptyProgress,
   loadProgress,
   recordQuiz,
@@ -51,6 +52,7 @@ describe("progress and rewards", () => {
       unit1.challengeId,
     ).state;
 
+    expect(countCompletedLessons(state, lessonIds)).toBe(5);
     expect(state.points).toBe(LESSON_POINTS * 5 + CHALLENGE_POINTS + UNIT_POINTS);
     expect(again.points).toBe(state.points);
     expect(state.badgeEarned).toBe(true);
@@ -64,6 +66,7 @@ describe("progress and rewards", () => {
   it("does not finish the unit before every lesson and the mission", () => {
     let state = createEmptyProgress();
     state = completeLesson(state, "U1-L1", 5).state;
+    expect(countCompletedLessons(state, unit1.lessons.map((lesson) => lesson.id))).toBe(1);
     expect(canCompleteUnit(state, unit1.lessons.map((lesson) => lesson.id), unit1.challengeId)).toBe(
       false,
     );

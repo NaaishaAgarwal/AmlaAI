@@ -46,7 +46,7 @@ export function ChoiceButton({
       aria-pressed={pressed}
       disabled={disabled}
       onClick={onClick}
-      className={`flex min-h-14 w-full items-center justify-between gap-4 rounded-xl border-2 border-ink bg-surface px-4 py-3 text-left text-base font-semibold leading-snug hover:bg-paper disabled:cursor-not-allowed ${pressed ? "bg-paper ring-4 ring-navy" : ""}`}
+      className={`flex min-h-14 w-full items-center justify-between gap-4 rounded-xl border-2 border-ink bg-surface px-4 py-3 text-left text-base font-semibold leading-snug hover:bg-paper disabled:cursor-not-allowed disabled:opacity-55 ${pressed ? "border-coral bg-paper ring-4 ring-coral" : ""}`}
     >
       <span>{children}</span>
       {marker ? <span className="shrink-0 font-bold">{marker}</span> : null}

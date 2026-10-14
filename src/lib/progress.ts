@@ -328,3 +328,7 @@ export function clearProgress(storage?: StorageLike | null) {
 }
 
 export const unitLessonIds = unit1.lessons.map((lesson) => lesson.id);
+
+export function countCompletedLessons(state: ProgressState, lessonIds: string[]) {
+  return lessonIds.filter((id) => state.lessons[id]?.status === "completed").length;
+}
