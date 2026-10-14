@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { Button } from "@/components/ui/Button";
@@ -47,14 +48,14 @@ export function LearningJourney() {
   return (
     <>
       <AppHeader />
-      <main id="main" className="mx-auto w-full max-w-6xl px-6 py-10">
-        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.8fr)]">
-          <section>
-            <h1 className="text-4xl font-bold leading-tight">Your AI Learning Journey</h1>
-            <p className="mt-4 max-w-[40rem] text-xl leading-relaxed">
+      <main id="main" className="mx-auto w-full max-w-[1100px] px-4 py-5 md:px-6 md:py-8">
+        <section className="grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_8.5rem] lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-8">
+          <div>
+            <h1 className="text-[clamp(1.7rem,4vw,2.6rem)] font-bold leading-tight">Your AI Learning Journey</h1>
+            <p className="mt-2 max-w-xl text-[clamp(1.05rem,2vw,1.25rem)] leading-snug">
               Discover AI one step at a time. Learn the basics, practice with real examples, and build confidence at your own pace.
             </p>
-            <div className="mt-6 max-w-xs">
+            <div className="mt-4 max-w-xs">
               {ready ? (
                 <Link
                   href={welcome.href}
@@ -66,14 +67,27 @@ export function LearningJourney() {
                 <Button disabled>Loading</Button>
               )}
             </div>
-          </section>
-          <section className="rounded-2xl border-2 border-ink bg-surface p-5" aria-label="Your progress">
-            <p className="text-2xl font-bold">{ready ? state.points : "…"} AI Points</p>
-            <p className="mt-2 font-semibold">
-              Unit 1 · {ready ? `${completed} of ${total} lessons` : "Loading your progress"}
-            </p>
+          </div>
+          <Image
+            src="/amla.png"
+            alt=""
+            width={830}
+            height={770}
+            priority
+            className="mx-auto h-auto w-28 sm:w-full lg:row-span-2 lg:max-w-xs lg:self-center"
+          />
+          <section className="rounded-2xl border-2 border-ink bg-surface p-4 sm:col-span-2 lg:col-span-1" aria-label="Your progress">
+            <div className="flex items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <p className="text-xl font-bold leading-tight">{ready ? state.points : "…"} AI Points</p>
+                <p className="mt-1 font-semibold leading-snug">
+                  Unit 1 · {ready ? `${completed} of ${total} lessons` : "Loading your progress"}
+                </p>
+              </div>
+              <CompassBadge earned={state.badgeEarned} compact />
+            </div>
             <div
-              className="mt-3 h-4 overflow-hidden rounded-full border-2 border-ink bg-white"
+              className="mt-3 h-3 overflow-hidden rounded-full border-2 border-ink bg-white"
               role="progressbar"
               aria-valuemin={0}
               aria-valuemax={100}
@@ -82,21 +96,22 @@ export function LearningJourney() {
             >
               <div className="h-full bg-coral" style={{ width: `${ready ? percent : 0}%` }} />
             </div>
-            <div className="mt-4">
-              <CompassBadge earned={state.badgeEarned} />
-            </div>
+            <p className="mt-2 font-bold leading-snug">{state.badgeEarned ? "AI Explorer" : "AI Explorer badge locked"}</p>
           </section>
-        </div>
+        </section>
 
-        <section className="mt-12" aria-labelledby="learning-path">
-          <h2 id="learning-path" className="text-3xl font-bold">
+        <section className="mt-8" aria-labelledby="learning-path">
+          <h2 id="learning-path" className="text-[clamp(1.4rem,3vw,2rem)] font-bold leading-tight">
             Learning path
           </h2>
-          <p className="mt-2 max-w-[40rem] leading-relaxed">
+          <p className="mt-1 max-w-xl leading-snug">
             Five units, in order. Unit 1 is ready now. The later units will open when they are built.
           </p>
-          <ol className="relative mx-auto mt-8 max-w-5xl space-y-8">
-            <div aria-hidden="true" className="absolute bottom-10 left-1/2 top-10 w-1 -translate-x-1/2 rounded-full bg-navy/25" />
+          <ol className="relative mt-5 space-y-4 md:mt-6 md:space-y-6">
+            <div
+              aria-hidden="true"
+              className="absolute bottom-4 left-[0.55rem] top-4 w-1 rounded-full bg-navy/25 md:left-1/2 md:-translate-x-1/2"
+            />
             {journeyUnits.map((unit, index) => {
               const isUnitOne = unit.id === unit1.id;
               const status = !unit.available
@@ -113,28 +128,31 @@ export function LearningJourney() {
                 : { label: "Coming soon", href: "", enabled: false };
               const current = isUnitOne && ready && completed < total;
               return (
-                <li key={unit.id} className={`relative flex ${index % 2 === 0 ? "justify-start" : "justify-end"}`}>
+                <li
+                  key={unit.id}
+                  className={`relative pl-8 md:flex md:pl-0 ${index % 2 === 0 ? "md:justify-start" : "md:justify-end"}`}
+                >
                   <span
                     aria-hidden="true"
-                    className={`absolute left-1/2 top-8 z-10 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-ink ${
+                    className={`absolute left-0 top-5 z-10 h-4 w-4 rounded-full border-2 border-ink md:left-1/2 md:top-7 md:h-5 md:w-5 md:-translate-x-1/2 ${
                       status === "Completed" ? "bg-coral" : current ? "bg-navy" : "bg-surface"
                     }`}
                   />
                   <article
-                    className={`relative w-[calc(50%-2.75rem)] rounded-2xl border-2 bg-surface p-6 ${
+                    className={`w-full rounded-2xl border-2 bg-surface p-4 md:w-[calc(50%-2rem)] md:p-5 ${
                       current ? "border-coral" : "border-ink"
                     }`}
                   >
                     <p className="font-bold text-navy">Unit {unit.number}</p>
-                    <h3 className="mt-1 text-2xl font-bold leading-tight">{unit.title}</h3>
-                    <p className="mt-3 leading-relaxed">{unit.description}</p>
-                    <p className="mt-3 font-semibold">{status}</p>
+                    <h3 className="mt-1 text-xl font-bold leading-tight md:text-2xl">{unit.title}</h3>
+                    <p className="mt-2 leading-snug">{unit.description}</p>
+                    <p className="mt-2 font-semibold">{status}</p>
                     {isUnitOne ? (
                       <p className="mt-1 font-semibold">
                         {ready ? `${completed} of ${total} lessons · ${percent}%` : "Progress loads with this browser."}
                       </p>
                     ) : null}
-                    <div className="mt-4 max-w-xs">
+                    <div className="mt-3">
                       {action.enabled ? (
                         <Link
                           href={action.href}
@@ -153,9 +171,9 @@ export function LearningJourney() {
           </ol>
         </section>
 
-        <section className="mt-12 rounded-2xl border-2 border-ink bg-surface p-6">
-          <h2 className="text-2xl font-bold">Privacy</h2>
-          <p className="mt-3 max-w-[40rem] leading-relaxed">
+        <section className="mt-8 rounded-2xl border-2 border-ink bg-surface p-4 md:p-5">
+          <h2 className="text-xl font-bold md:text-2xl">Privacy</h2>
+          <p className="mt-2 max-w-xl leading-snug">
             Your progress stays in this browser on this device. It is not sent to a server, and it will not appear on another computer or phone.
           </p>
           {!confirmReset ? (
@@ -183,6 +201,17 @@ export function LearningJourney() {
             </div>
           )}
         </section>
+        <footer className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t-2 border-ink pt-4">
+          <p className="font-bold">Amla AI</p>
+          <nav aria-label="Footer" className="flex gap-4 font-bold">
+            <Link href="/" className="inline-flex min-h-[44px] items-center underline-offset-4 hover:underline">
+              Home
+            </Link>
+            <Link href="/unit-1" className="inline-flex min-h-[44px] items-center underline-offset-4 hover:underline">
+              Unit 1
+            </Link>
+          </nav>
+        </footer>
       </main>
     </>
   );

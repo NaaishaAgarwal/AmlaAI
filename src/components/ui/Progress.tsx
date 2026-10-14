@@ -12,12 +12,12 @@ export function SkillMeter({ name, percent }: { name: string; percent: number })
   );
 }
 
-export function CompassBadge({ earned }: { earned: boolean }) {
+export function CompassBadge({ earned, compact = false }: { earned: boolean; compact?: boolean }) {
   return (
-    <div className="flex flex-col items-center gap-4 text-center">
+    <div className={compact ? "shrink-0" : "flex flex-col items-center gap-4 text-center"}>
       <svg
         viewBox="0 0 160 160"
-        className="h-36 w-36"
+        className={compact ? "h-12 w-12" : "h-36 w-36"}
         aria-hidden="true"
         focusable="false"
       >
@@ -33,9 +33,9 @@ export function CompassBadge({ earned }: { earned: boolean }) {
         />
         <circle cx="80" cy="46" r="5" fill={earned ? "#f08069" : "#176b68"} />
       </svg>
-      <p className="text-2xl font-bold tracking-wide">
-        {earned ? "AI Explorer" : "AI Explorer badge locked"}
-      </p>
+      {compact ? null : (
+        <p className="text-2xl font-bold tracking-wide">{earned ? "AI Explorer" : "AI Explorer badge locked"}</p>
+      )}
     </div>
   );
 }

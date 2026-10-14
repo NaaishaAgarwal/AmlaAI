@@ -11,8 +11,12 @@ const atkinson = Atkinson_Hyperlegible({
 });
 
 export const metadata: Metadata = {
-  title: "Meet AI",
-  description: "Unit 1 introduces artificial intelligence in plain language.",
+  title: "Amla AI",
+  description: "Amla AI helps you learn artificial intelligence one step at a time.",
+  openGraph: {
+    title: "Amla AI",
+    description: "Amla AI helps you learn artificial intelligence one step at a time.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

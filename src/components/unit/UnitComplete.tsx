@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { Button } from "@/components/ui/Button";
@@ -58,8 +59,19 @@ export function UnitComplete() {
     <>
       <AppHeader />
       <main id="main" className="mx-auto w-full max-w-[40rem] px-5 py-8">
-        <p className="text-2xl font-bold">Congratulations!</p>
-        <h1 className="mt-3 text-4xl font-bold leading-tight">You&apos;ve completed Unit 1!</h1>
+        <div className="flex items-center gap-4">
+          <Image
+            src="/amla.png"
+            alt=""
+            width={830}
+            height={770}
+            className="h-auto w-20 shrink-0"
+          />
+          <div>
+            <p className="text-2xl font-bold">Congratulations!</p>
+            <h1 className="mt-1 text-4xl font-bold leading-tight">You&apos;ve completed Unit 1!</h1>
+          </div>
+        </div>
         <p className="mt-4 text-2xl font-bold">You are now an AI Explorer.</p>
         <div className="mt-6">
           <CompassBadge earned />

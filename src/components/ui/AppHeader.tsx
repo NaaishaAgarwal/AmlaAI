@@ -55,7 +55,7 @@ export function TextSizeControl() {
         aria-controls={panelId}
         aria-haspopup="dialog"
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex min-h-14 items-center gap-2 rounded-xl border-2 border-navy bg-surface px-4 font-bold text-navy"
+        className="inline-flex min-h-[44px] items-center gap-[8px] whitespace-nowrap rounded-xl border-2 border-navy bg-surface px-[12px] text-[16px] font-bold leading-none text-navy"
       >
         Text size
         <span aria-hidden="true">{open ? "▴" : "▾"}</span>
@@ -66,7 +66,7 @@ export function TextSizeControl() {
           id={panelId}
           role="dialog"
           aria-label="Text size"
-          className="absolute right-0 z-20 mt-2 w-80 max-w-[calc(100vw-2.5rem)] rounded-2xl border-2 border-navy bg-surface p-4"
+          className="absolute right-0 z-30 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border-2 border-navy bg-surface p-4"
         >
           <p className="font-bold">Text size</p>
           <div className="mt-3 flex items-center gap-2">
@@ -109,15 +109,18 @@ function NavLink({
   href,
   current,
   children,
+  onNavigate,
 }: {
   href: string;
   current: boolean;
   children: string;
+  onNavigate?: () => void;
 }) {
   return (
     <Link
       href={href}
       aria-current={current ? "page" : undefined}
+      onClick={onNavigate}
       className={`inline-flex min-h-12 items-center rounded-xl px-4 font-bold ${current ? "bg-navy text-white" : "text-ink hover:bg-paper"}`}
     >
       {children}
@@ -127,25 +130,30 @@ function NavLink({
 
 export function AppHeader() {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
   const onUnit =
     pathname.startsWith("/unit-1") ||
     pathname.startsWith("/lesson") ||
     pathname.startsWith("/unit-complete");
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <header className="border-b-2 border-ink bg-surface">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-30 focus:bg-white focus:px-4 focus:py-3"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-40 focus:bg-white focus:px-4 focus:py-3"
       >
         Skip to content
       </a>
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-          <Link href="/" className="text-2xl font-bold text-ink underline-offset-4 hover:underline">
-            Meet AI
+      <div className="mx-auto flex w-full max-w-[1100px] items-center justify-between gap-[8px] px-[12px] py-[8px] md:px-6">
+        <div className="flex shrink-0 items-center gap-[12px]">
+          <Link
+            href="/"
+            className="whitespace-nowrap text-[18px] font-bold leading-none text-ink underline-offset-4 hover:underline"
+          >
+            Amla AI
           </Link>
-          <nav aria-label="Main" className="flex flex-wrap items-center gap-2">
+          <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
             <NavLink href="/" current={pathname === "/"}>
               Home
             </NavLink>
@@ -154,8 +162,29 @@ export function AppHeader() {
             </NavLink>
           </nav>
         </div>
-        <TextSizeControl />
+        <div className="flex shrink-0 items-center gap-[8px]">
+          <button
+            type="button"
+            className="inline-flex min-h-[44px] items-center whitespace-nowrap rounded-xl border-2 border-ink px-[12px] text-[16px] font-bold leading-none md:hidden"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            Menu
+          </button>
+          <TextSizeControl />
+        </div>
       </div>
+      {menuOpen ? (
+        <nav id="mobile-menu" aria-label="Mobile" className="flex flex-col gap-1 border-t-2 border-ink px-4 py-2 md:hidden">
+          <NavLink href="/" current={pathname === "/"} onNavigate={closeMenu}>
+            Home
+          </NavLink>
+          <NavLink href="/unit-1" current={onUnit} onNavigate={closeMenu}>
+            Unit 1
+          </NavLink>
+        </nav>
+      ) : null}
     </header>
   );
 }
